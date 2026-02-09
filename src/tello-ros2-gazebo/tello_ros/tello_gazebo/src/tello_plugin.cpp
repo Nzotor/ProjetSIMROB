@@ -40,7 +40,7 @@ namespace tello_gazebo
 
   const double MAX_XY_A = 8.0;
   const double MAX_Z_A = 4.0;
-  const double MAX_ANG_A = M_PI;
+  const double MAX_ANG_A = 8.0;
 
   const double TAKEOFF_Z = 1.0;       // Takeoff target z position
   const double TAKEOFF_Z_V = 0.5;     // Takeoff target z velocity
@@ -54,6 +54,8 @@ namespace tello_gazebo
   {
     return v > max ? max : (v < -max ? -max : v);
   }
+
+  const double YAW_KP = 4.0;
 
   class TelloPlugin : public gazebo::ModelPlugin
   {
@@ -107,7 +109,7 @@ namespace tello_gazebo
     pid::Controller x_controller_{false, 2, 0, 0};
     pid::Controller y_controller_{false, 2, 0, 0};
     pid::Controller z_controller_{false, 2, 0, 0};
-    pid::Controller yaw_controller_{false, 2, 0, 0};
+    pid::Controller yaw_controller_{false, YAW_KP, 0, 0};
 
   public:
 
