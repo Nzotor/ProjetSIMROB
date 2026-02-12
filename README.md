@@ -81,6 +81,7 @@ sudo apt install ros-<distro>-gazebo-ros-pkgs
 sudo apt install ros-<distro>-cv-bridge
 pip3 install transformations
 Remplacer <distro> par votre distribution ROS2 (ex: galactic, humble).
+```
 
 🚀 Installation
 ```bash
@@ -91,18 +92,19 @@ cd ..
 source /opt/ros/<distro>/setup.bash
 colcon build
 source install/setup.bash
-
+```
 
 ▶️ Lancement de la simulation
 ```bash
 ros2 launch tello_gazebo simple_launch.py
+```
 
 Si nécessaire :
 
 ```bash
 export GAZEBO_MODEL_PATH=${PWD}/install/tello_gazebo/share/tello_gazebo/models
 source /usr/share/gazebo/setup.sh
-
+```
 
 🎮 Commandes clavier
 Touche	Action
@@ -132,3 +134,4 @@ Exemple :
 
 ```bash
 ros2 service call /drone1/tello_action tello_msgs/TelloAction "{cmd: 'takeoff'}"
+```
