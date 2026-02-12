@@ -1,54 +1,125 @@
-## Running a Tello simulation in [Gazebo](http://gazebosim.org/)
+# 🚁 Tello ROS2 Simulation – Projet SIMROB
 
-`tello_gazebo` consists of several components:
-* `TelloPlugin` simulates a drone, handling takeoff, landing and very simple flight dynamics
-* `markers` contains Gazebo models for fiducial markers
-* `fiducial.world` is a simple world with a bunch of fiducial markers
-* `inject_entity.py` is a script that will read an URDF (ROS) or SDF (Gazebo) file and spawn a model in a running instance of Gazebo
-* the built-in camera plugin is used to emulate the Gazebo forward-facing camera
+## 📌 Description
 
+Ce projet a été réalisé dans le cadre du module **SIMROB**.
 
-## Installation
-#### Install ROS2 Galactic
-    https://docs.ros.org/ with the `ros-galactic-desktop` option.
-#### Make sure you have gazebo 
-    sudo apt install gazebo11 libgazebo11 libgazebo11-dev
-#### Add the following
-    sudo apt install libasio-dev
-    sudo apt install ros-galactic-cv-bridge ros-galactic-camera-calibration-parsers 
-    sudo apt install libignition-rendering3 
-    pip3 install transformations
+Il propose une simulation complète d’un drone **Tello** sous **ROS 2**, utilisant **Gazebo** comme environnement physique et visuel.
 
+Le système permet :
 
-#### Build this package
-    mkdir -p ~/tello_ros_ws/src
-    cd ~/tello_ros_ws/src
-    git clone https://github.com/TIERS/tello-ros2-gazebo.git
-    cd ..
-    source /opt/ros/galactic/setup.bash
-    colcon build
-    
-#### Run a teleop simulation
+- ✅ Le pilotage manuel (clavier / joystick)
+- ✅ L’exécution de trajectoires prédéfinies
+- ✅ Un mode pilote automatique
+- ✅ L’interaction avec un environnement simulé (anneaux, arène)
+- ✅ Une architecture compatible multi-drones
 
-    cd ~/tello_ros_ws
-    source install/setup.bash
-    export GAZEBO_MODEL_PATH=${PWD}/install/tello_gazebo/share/tello_gazebo/models
-    source /usr/share/gazebo/setup.sh
-    ros2 launch tello_gazebo simple_launch.py
-    
-You will see a single drone in a blank world.
-You can control the drone using the joystick.
+---
 
-If you run into the **No namespace found** error re-set `GAZEBO_MODEL_PATH`:
+## 🏗️ Architecture
 
-    export GAZEBO_MODEL_PATH=${PWD}/install/tello_gazebo/share/tello_gazebo/models
-    source /usr/share/gazebo/setup.sh
-    
+Le projet repose sur une architecture ROS2 modulaire composée de :
 
-#### Control the drone 
-    ros2 service call /drone1/tello_action tello_msgs/TelloAction "{cmd: 'takeoff'}"
-    ros2 service call /drone1/tello_action tello_msgs/TelloAction "{cmd: 'land'}"
-    ros2 launch tello_gazebo keyboard_launch.py
+- `tello_description` → Description URDF du drone  
+- `tello_gazebo` → Plugin Gazebo et mondes  
+- `tello_driver` → Nœuds de contrôle (clavier, joystick, autopilot)  
+- `tello_msgs` → Messages et services personnalisés  
+
+### 🔄 Flux principal
+
+tello_keyboard / tello_joy
+↓
+cmd_vel
+↓
+TelloPlugin (Gazebo)
+↓
+Simulation physique
+↓
+model_states
 
 
+Cette architecture permet une séparation claire entre :
 
+- 🔹 La commande utilisateur  
+- 🔹 La dynamique du drone  
+- 🔹 La simulation physique  
+- 🔹 Le retour d’état  
+
+---
+
+## 🛠️ Technologies utilisées
+
+- ROS 2
+- Gazebo
+- Python (rclpy)
+- C++ (rclcpp)
+- URDF
+- geometry_msgs / sensor_msgs
+- gazebo_ros
+- tello_msgs (services personnalisés)
+
+---
+
+## 📦 Dépendances
+
+### ROS 2
+
+- rclpy  
+- rclcpp  
+- geometry_msgs  
+- sensor_msgs  
+- std_msgs  
+- gazebo_ros  
+- joy  
+
+### Système
+
+```bash
+sudo apt install gazebo11 libgazebo11 libgazebo11-dev
+sudo apt install libasio-dev
+sudo apt install ros-<distro>-gazebo-ros-pkgs
+sudo apt install ros-<distro>-cv-bridge
+pip3 install transformations
+Remplacer <distro> par votre distribution ROS2 (ex: galactic, humble).
+
+🚀 Installation
+mkdir -p ~/tello_ros_ws/src
+cd ~/tello_ros_ws/src
+git clone https://github.com/Nzotor/ProjetSIMROB.git
+cd ..
+source /opt/ros/<distro>/setup.bash
+colcon build
+source install/setup.bash
+▶️ Lancement de la simulation
+ros2 launch tello_gazebo simple_launch.py
+Si nécessaire :
+
+export GAZEBO_MODEL_PATH=${PWD}/install/tello_gazebo/share/tello_gazebo/models
+source /usr/share/gazebo/setup.sh
+🎮 Commandes clavier
+Touche	Action
+↑ ↓ ← →	Déplacement
+t	Takeoff
+l	Land
+a	Trajectoire carré
+c	Trajectoire cercle
+h	Trajectoire huit
+k	Activer anneau
+g	Activer autopilot
+space	Stop
+q	Quitter
+🧠 Services utilisés
+/drone1/tello_action
+Type : tello_msgs/TelloAction
+
+Permet :
+
+takeoff
+
+land
+
+commandes rc
+
+Exemple :
+
+ros2 service call /drone1/tello_action tello_msgs/TelloAction "{cmd: 'takeoff'}"
