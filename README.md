@@ -83,6 +83,7 @@ pip3 install transformations
 Remplacer <distro> par votre distribution ROS2 (ex: galactic, humble).
 
 🚀 Installation
+```bash
 mkdir -p ~/tello_ros_ws/src
 cd ~/tello_ros_ws/src
 git clone https://github.com/Nzotor/ProjetSIMROB.git
@@ -90,12 +91,19 @@ cd ..
 source /opt/ros/<distro>/setup.bash
 colcon build
 source install/setup.bash
+
+
 ▶️ Lancement de la simulation
+```bash
 ros2 launch tello_gazebo simple_launch.py
+
 Si nécessaire :
 
+```bash
 export GAZEBO_MODEL_PATH=${PWD}/install/tello_gazebo/share/tello_gazebo/models
 source /usr/share/gazebo/setup.sh
+
+
 🎮 Commandes clavier
 Touche	Action
 ↑ ↓ ← →	Déplacement
@@ -122,4 +130,5 @@ commandes rc
 
 Exemple :
 
+```bash
 ros2 service call /drone1/tello_action tello_msgs/TelloAction "{cmd: 'takeoff'}"
